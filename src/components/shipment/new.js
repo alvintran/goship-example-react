@@ -14,26 +14,26 @@ class NewShipment extends Component {
       getRate: false,
       shipment: {
         address_from: {
-          name: 'nguyentranhoan',
-          phone: '01659360020',
+          name: '',
+          phone: '',
           city: '',
           district: '',
-          street: 'ha noi'
+          street: ''
         },
         address_to: {
-          name: 'lebaokhang',
-          phone: '01659360020',
+          name: '',
+          phone: '',
           city: '',
           district: '',
-          street: 'ha noi'
+          street: ''
         },
         parcel: {
-          cod: '1000',
-          weight: '10',
-          height: '10',
-          length: '10',
-          width: '10',
-          metadata: '10'
+          cod: '',
+          weight: '',
+          height: '',
+          length: '',
+          width: '',
+          metadata: ''
         },
         rate: ''
       },
