@@ -17,7 +17,7 @@ $ npm install
 $ npm start
 ```
 Tạo tài khoản goship lấy `client_key `& `client_secret` theo hướng dẫn [tại đây](https://goship.io/developers/24-authentication-api).
-Copy app_key & app_secret của bạn vào file `/src/components/login/index.js`
+Copy `client_key` & `client_secret` của bạn vào file `/src/components/login/index.js`
 
 ```javascript
     this.state = {
