@@ -6,8 +6,8 @@ class Login extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      client_id: '',
-      client_secret: '',
+      client_id: 4,
+      client_secret: "hjg5CRXMcj7Qfnaxjj4RVsPPrFkixgQliDp0AseZ",
       username: '',
       password: ''
     }

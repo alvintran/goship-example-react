@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { getAllCities, getDistrictsOfCity } from '../../api/city'
+import { getWardsOfDistrict} from '../../api/district'
 import { getRates } from '../../api/rate'
 import { createShipment } from '../../api/shipment'
 import { debounce } from 'lodash'
@@ -9,6 +10,7 @@ class NewShipment extends Component {
     this.state = {
       cities: [],
       districtFroms: [],
+      wardFroms: [],
       districtTos: [],
       rates: [],
       getRate: false,
@@ -18,6 +20,7 @@ class NewShipment extends Component {
           phone: '',
           city: '',
           district: '',
+          ward: '',
           street: ''
         },
         address_to: {
@@ -53,6 +56,7 @@ class NewShipment extends Component {
      this.handleChange = this.handleChange.bind(this)
      this.getDistrictsFrom = this.getDistrictsFrom.bind(this)
      this.getDistrictsTo = this.getDistrictsTo.bind(this)
+     this.getWardFrom = this.getWardFrom.bind(this)
      this.getRates = debounce(this.getRates.bind(this), 1000)
   }
 
@@ -62,7 +66,7 @@ class NewShipment extends Component {
       switch (response.code) {
         case 200:
           alert('Tạo mới thành công')
-          window.location.href = '/shipment'
+          // window.location.href = '/shipment'
           break
         case 422:
           alert(JSON.stringify(response.data.errors))
@@ -123,6 +127,32 @@ class NewShipment extends Component {
       })
     } else {
       this.setState({districtFroms: []})
+    }
+  }
+
+  getWardFrom (event) {
+    if (this.state.changeFeeList.indexOf(event.target.name) > -1) {
+      this.setState({getRate: true})
+    }
+    let str = event.target.name.split('.')
+    let newState = Object.assign({}, this.state['shipment'])
+    if (str.length === 2) {
+      newState[str[0]][str[1]] = event.target.value
+    }
+    if (str.length === 1) {
+      newState[str[0]] = event.target.value
+    }
+    this.setState(newState)
+    if (event.target.value) {
+      getWardsOfDistrict(event.target.value).then(response => {
+        if (response.code === 200) {
+          this.setState({wardFroms: response.data})
+        } else {
+          console.log('get district fail')
+        }
+      })
+    } else {
+      this.setState({wardFroms: []})
     }
   }
 
@@ -225,12 +255,25 @@ class NewShipment extends Component {
               </div>
               <div className="form-group">
                 <label>Quận huyện</label>
-                <select value={this.state.shipment.address_from.district} className="form-control" name="address_from.district" onChange={this.handleChange} placeholder="Quận huyện">
+                <select value={this.state.shipment.address_from.district} className="form-control" name="address_from.district" onChange={this.getWardFrom} placeholder="Quận huyện">
                   <option>Chọn quận huyện</option>
                   {
                     this.state.districtFroms.map((district) => {
                       return (
                         <option key={district.id} value={district.id}>{district.name}</option>
+                      )
+                    })
+                  }
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Phường xã</label>
+                <select value={this.state.shipment.address_from.ward} className="form-control" name="address_from.ward" onChange={this.handleChange} placeholder="Phường xã">
+                  <option>Chọn phường xã</option>
+                  {
+                    this.state.wardFroms.map((ward) => {
+                      return (
+                        <option key={ward.id} value={ward.id}>{ward.name}</option>
                       )
                     })
                   }
@@ -278,6 +321,8 @@ class NewShipment extends Component {
                 </select>
               </div>
             </div>
+          </div>
+          <div className="row">
             <div className="col-sm-4">
               <h3>Thông tin hàng hóa</h3>
               <div className="form-group">
